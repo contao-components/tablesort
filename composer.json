@@ -1,0 +1,28 @@
+{
+    "name": "contao-components/tablesort",
+    "type": "component",
+    "description": "Contao Open Source CMS tablesort",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Leo Feyer",
+            "homepage": "https://github.com/leofeyer"
+        }
+    ],
+    "require": {
+        "robloach/component-installer": "~0.0"
+    },
+    "extra": {
+        "component": {
+            "scripts": [
+                "js/tablesort.min.js"
+            ],
+            "styles": [
+                "css/tablesort.min.css"
+            ],
+            "files": [
+                "images/*"
+            ]
+        }
+    }
+}
