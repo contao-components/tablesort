@@ -56,6 +56,7 @@ var TableSort = new Class(
 		}
 
 		var cook = null,
+			sorter = this,
 			vars = Cookie.read('TS_' + table.get('id').toUpperCase());
 
 		if (vars !== null) {
@@ -79,13 +80,13 @@ var TableSort = new Class(
 
 			// Add the event
 			a.addEvent('click', function(i, el) {
-				this.resort(i, el)
-			}.pass([i, el], this)).inject(el);
+				sorter.resort(i, el)
+			}.pass([i, el])).inject(el);
 
 			// Sort the table if there is a cookie
 			if (cook !== null && cook[0] == i) {
 				$(el).addClass((cook[1] == 'desc') ? 'asc' : 'desc');
-				this.resort(cook[0], el);
+				sorter.resort(cook[0], el);
 			}
 		}
 	},
@@ -215,8 +216,8 @@ var TableSort = new Class(
 	/**
 	 * Compare two dates
 	 *
-	 * @param {string} a The first date
-	 * @param {string} b The second date
+	 * @param {object} a The first table row
+	 * @param {object} b The second table row
 	 *
 	 * @returns {int}
 	 */
@@ -251,8 +252,8 @@ var TableSort = new Class(
 	/**
 	 * Compare two numbers
 	 *
-	 * @param {string} a The first number
-	 * @param {string} b The second number
+	 * @param {object} a The first table row
+	 * @param {object} b The second table row
 	 *
 	 * @returns {int}
 	 */
@@ -287,8 +288,8 @@ var TableSort = new Class(
 	/**
 	 * Compare two strings
 	 *
-	 * @param {string} a The first string
-	 * @param {string} b The second string
+	 * @param {object} a The first table row
+	 * @param {object} b The second table row
 	 *
 	 * @returns {int}
 	 */
