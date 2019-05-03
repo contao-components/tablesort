@@ -46,6 +46,7 @@ var TableSort = new Class(
 		if (thousandsSeparator) {
 			THOUSANDS_SEPARATOR = thousandsSeparator;
 		}
+
 		if (decimalSeparator) {
 			DECIMAL_SEPARATOR = decimalSeparator;
 		}
@@ -55,12 +56,18 @@ var TableSort = new Class(
 			return;
 		}
 
-		var cook = null,
+		var chunks = null,
 			sorter = this,
-			vars = Cookie.read('TS_' + table.get('id').toUpperCase());
+			vars = window.localStorage.getItem('tablesort_' + table.get('id'));
 
-		if (vars !== null) {
-			cook = vars.split('|');
+		if (vars) {
+			chunks = vars.split('|');
+		} else {
+			var defsort = table.get('data-sort-default');
+
+			if (defsort) {
+				chunks = defsort.split('|');
+			}
 		}
 
 		var lastRow = table.tHead.rows[table.tHead.rows.length-1];
@@ -83,10 +90,10 @@ var TableSort = new Class(
 				sorter.resort(i, el)
 			}.pass([i, el])).inject(el);
 
-			// Sort the table if there is a cookie
-			if (cook !== null && cook[0] == i) {
-				$(el).addClass((cook[1] == 'desc') ? 'asc' : 'desc');
-				sorter.resort(cook[0], el);
+			// Sort the table
+			if (chunks && chunks[0] == i) {
+				$(el).addClass((chunks[1] == 'desc') ? 'asc' : 'desc');
+				sorter.resort(chunks[0], el);
 			}
 		}
 	},
@@ -139,10 +146,7 @@ var TableSort = new Class(
 			tbody.sort(this.sortCaseInsensitive);
 		}
 
-		// Get the cookie path
-		var base = $$('base').get('href'),
-			cpath = base[0].replace(window.location.protocol + '//', '').replace(window.location.host, '').replace(/\/$/, '') || '/',
-			cs = th.getChildren(), cls;
+		var cs = th.getChildren(), cls;
 
 		// Sort ascending
 		if (el.className.indexOf('asc') == -1) {
@@ -152,7 +156,7 @@ var TableSort = new Class(
 			}
 
 			el.addClass('asc');
-			Cookie.write('TS_' + table.id.toUpperCase(), index + '|asc', { path: cpath });
+			window.localStorage.setItem('tablesort_' + table.id, index + '|asc');
 		} else {
 			for (i=0; i<cs.length; i++) {
 				cs[i].removeClass('asc');
@@ -160,8 +164,8 @@ var TableSort = new Class(
 			}
 
 			el.addClass('desc');
-			Cookie.write('TS_' + table.id.toUpperCase(), index + '|desc', { path: cpath });
-			tbody.reverse(); // Descending
+			window.localStorage.setItem('tablesort_' + table.id, index + '|desc');
+			tbody.reverse();
 		}
 
 		// Update the table
